@@ -4,6 +4,10 @@
   "description": "Skeleton project setup",
   "author": "Your Name",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ashrewdmint/js-skeleton-project"
+  },
   "dependencies": {
   },
   "devDependencies": {

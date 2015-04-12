@@ -37,3 +37,4 @@ management, and `make` for building and tasks (instead of `gulp` or `grunt`).
  * Automatic `$ bower install` should check if all `bower` dependencies are
    fulfilled, not just for the existence of `bower_components/`
  * Make this into a `yeoman` recipe, or whatever those are called?
+ * Make sure the dev server maps all paths to `build/index.html`

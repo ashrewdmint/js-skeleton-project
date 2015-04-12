@@ -41,7 +41,7 @@ watch:
 script: bower build-dir
 	@echo [Compiling javascript]
 	@rm -f build/bundle.js
-	$(NPM) browserify --debug src/script/*.js src/script/*/*.js -o build/bundle.js
+	$(NPM) browserify --debug src/**/*.js -o build/bundle.js
 
 style: bower build-dir
 	@echo [Compiling stylesheets]
