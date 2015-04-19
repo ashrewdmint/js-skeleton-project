@@ -2,6 +2,10 @@
 // JAKEFILE ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+/* global jake: false, desc: false, task: false, file: false, directory: false,
+   namespace: false */
+/* jshint strict: false */
+
 var express    = require('express'),
     livereload = require('livereload'),
     fs         = require('fs');
@@ -18,7 +22,6 @@ jake.npmExec = function (input, opts) {
 };
 
 function isDev () { return process.env.env !== 'production'; }
-function isProduction () { return !isDev(); }
 function target () { return isDev() ? BUILD : PUBLIC; }
 
 // TASKS ///////////////////////////////////////////////////////////////////////
@@ -131,7 +134,7 @@ task('server', ['build:all'], function () {
   }
 
   app.use(function(req, res, next) {
-    if (process.env.verbose) console.log(req.method+' '+req.path);
+    if (process.env.verbose) { console.log(req.method+' '+req.path); }
     if (!req.path.match(/^index\.html|^\/$/)) {
       fs.open(dir+req.path, 'r', function (err) {
         // No error? This is an asset, pass to other routes
