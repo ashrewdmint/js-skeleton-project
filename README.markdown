@@ -36,5 +36,5 @@ and `jake` for building and tasks (instead of `gulp` or `grunt`).
 
 ## TODO
 
- * Add test suite manager
+ * Use `file` tasks for compiling JS and CSS
  * Make this into a `yeoman` recipe, or whatever those are called?
