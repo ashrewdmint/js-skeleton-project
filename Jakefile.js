@@ -40,6 +40,11 @@ task('lint', function () {
   });
 });
 
+desc('Runs tests');
+task('test', function () {
+  jake.npmExec('jasmine', { printStdout: true, breakOnError: true });
+});
+
 namespace('build', function () {
   desc('Packages all scripts into bundle.js');
   task('script', [BUILD, 'lint'], function () {

@@ -3,8 +3,9 @@
 ## About
 
 This is a basic one-page JavaScript project which uses `bower` and `npm` for
-package management, `stylus` for CSS, `browserify` for JavaScript dependency
-management, and `jake` for building and tasks (instead of `gulp` or `grunt`).
+package management, `stylus` for CSS, `browserify` for JavaScript
+modules/dependencies, `jasmin` for tests, `jshint` for code quality enforcement,
+and `jake` for building and tasks (instead of `gulp` or `grunt`).
 
 ## Getting started
 
@@ -21,6 +22,7 @@ management, and `jake` for building and tasks (instead of `gulp` or `grunt`).
     and send them to the `public/` directory (e.g. `$ jake env=production`),
     or to serve the `public/` directory without livereload or source watching
     (e.g. `$ jake server env=production`)
+ 1. `$ jake test` runs the tests
 
 ## Adding packages
 
