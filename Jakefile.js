@@ -15,11 +15,11 @@ var PORT   = 8080,
 jake.npmExec = function (input, opts) {
   opts = opts || { breakOnError: true };
   return this.exec(['PATH=$(npm bin):$PATH '+input], opts);
-}
+};
 
-isDev = function () { return process.env.env !== 'production'; }
-isProduction = function () { return !isDev(); }
-target = function () { return isDev() ? BUILD : PUBLIC; }
+function isDev () { return process.env.env !== 'production'; }
+function isProduction () { return !isDev(); }
+function target () { return isDev() ? BUILD : PUBLIC; }
 
 // TASKS ///////////////////////////////////////////////////////////////////////
 
@@ -30,8 +30,11 @@ directory(PUBLIC); // The same, but for PUBLIC
 
 desc('Runs JS through nodelint');
 task('lint', function () {
-  console.log('Running nodelint...');
-  jake.npmExec('nodelint src/script/', { breakOnError: true, printStdout: true });
+  console.log('Running jshint...');
+  jake.npmExec('jshint src/script/ Jakefile.js', {
+    breakOnError: true,
+    printStdout: true
+  });
 });
 
 namespace('build', function () {
@@ -39,7 +42,7 @@ namespace('build', function () {
   task('script', [BUILD, 'lint'], function () {
     console.log('Processing scripts...');
     var debug = isDev() ? ' --debug' : '';
-    jake.npmExec(['browserify -t debowerify', debug,
+    jake.npmExec(['browserify -t debowerify -t strictify', debug,
       'src/**/*.js -o '+BUILD+'/bundle.js'].join(' '));
   });
 
@@ -102,24 +105,25 @@ task('server', ['build:all'], function () {
   var app = express(),
       port = process.env.port ? parseInt(process.env.port, 10) : PORT,
       dev  = isDev(),
-      dir  = __dirname+'/'+(dev ? BUILD : PUBLIC);
+      dir  = __dirname+'/'+(dev ? BUILD : PUBLIC),
+      server, lr;
 
   if (dev) {
-    var lr = livereload.createServer();
+    lr = livereload.createServer();
     lr.watch(dir);
     console.log('Livereload running');
-    jake.Task['watch'].invoke();
+    jake.Task.watch.invoke();
   }
 
   function showIndex(res, next) {
     // Read index.html and inject livereload stuff into it
     fs.readFile(dir+'/index.html', function (err, data) {
-      if (!data) { next() ; return };
+      if (!data) { next(); return; }
       var html = data.toString(), inj;
 
       if (dev) {
         inj = '<script src="http://localhost:35729/livereload.js"></script>';
-        html = data.toString().replace(/(<\/head>)/, inj+'\1');
+        html = data.toString().replace(/(<\/head>)/, inj+'$1');
       }
 
       res.format({'text/html': function () { res.send(html); } });
@@ -127,11 +131,11 @@ task('server', ['build:all'], function () {
   }
 
   app.use(function(req, res, next) {
-    console.log(req.method+' '+req.path);
+    if (process.env.verbose) console.log(req.method+' '+req.path);
     if (!req.path.match(/^index\.html|^\/$/)) {
       fs.open(dir+req.path, 'r', function (err) {
         // No error? This is an asset, pass to other routes
-        err ? showIndex(res, next) : next();
+        return err ? showIndex(res, next) : next();
       });
     } else {
       showIndex(res, next);
@@ -140,6 +144,6 @@ task('server', ['build:all'], function () {
 
   app.use(express.static(dir));
 
-  var server = app.listen(port);
+  server = app.listen(port);
   console.log('Server running on localhost:'+port);
 });
