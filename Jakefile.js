@@ -63,12 +63,17 @@ namespace('build', function () {
 
   desc('Performs all build tasks');
   task('all', ['index', 'script', 'style'], function () {
-    if (isDev()) return;
-    // Minify JS and CSS
+    if (isDev()) {
+      console.log(BUILD+'/ is ready!');
+      return;
+    }
+
+    console.log('Minifying JS and CSS...');
     ['css', 'js'].forEach(function (ext) {
       var output = PUBLIC+'/bundle.'+ext, input = BUILD+'/bundle.'+ext;
       jake.npmExec('minify --output '+output+' '+input);
     });
+    console.log(PUBLIC+'/ is ready!');
   });
 });
 
